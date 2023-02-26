@@ -1,0 +1,1 @@
+docker run -d -p 5000:5000 -v /docker_registry:/var/lib/registry --restart=always --name docker_registry registry:2.6.2
