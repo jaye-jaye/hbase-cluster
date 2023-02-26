@@ -44,7 +44,7 @@ fi
 
 if [[ `hostname -s` =~ (.*)-([0-9]+)$ ]]; then
     NAME=${BASH_REMATCH[1]}
-    ORD=${BASH_REMATCH[1]}
+    ORD=${BASH_REMATCH[2]}
     ZOO_MY_ID=$((ORD+1))
 else
     echo "Failed to parse name and ordinal of pod"
