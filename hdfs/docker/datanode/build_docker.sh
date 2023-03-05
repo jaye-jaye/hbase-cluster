@@ -1,0 +1,1 @@
+docker build . -t 192.168.9.128:5000/jayeljj/hadoop-base:3.3.4

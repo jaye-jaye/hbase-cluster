@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hadoop-env
+  namespace: hbase-cluster
+data:
+  CORE_CONF_fs_defaultFS: "hdfs://hdfs-cluster"
+  CORE_CONF_hadoop_http_staticuser_users "httpuser"
+  # CORE_CONF_hadoop_proxyuser_hue_hosts: ""
+  # CORE_CONF_hadoop_proxyuser_hue_groups: ""
+  CORE_CONF_io_compression_codecs: "org.apache.hadoop.io.compress.SnappyCodec"
+  HDFS_CONF_dfs_webhdfs_enabled: "false"
+  HDFS_CONF_dfs_permissions_enabled: "true"
+  HDFS_CONF_dfs_namenode_datanode_registration_ip___hostname_check: "false"
+  HDFS_CONF_dfs_client_failover_proxy_provider_hdfs_cluster: "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+  HDFS_CONF_dfs_namenode_shared_edits_dirt: "qjournal://hdfs-jn-0.hdfs-jn-svc:8485;hdfs-jn-1.hdfs-jn-svc:8485;hdfs-jn-2.hdfs-jn-svc:8485/hdfs-cluster"
+  HDFS_CONF_dfs_namenode_http___address_hdfs___cluster_nn0 : "hdfs-nn-0.hdfs-nn-svc.hdfs-cluster.svc.cluster.local:9870"
+  HDFS_CONF_dfs_namenode_http___address_hdfs___cluster_nn1: "hdfs-nn-1.hdfs-nn-svc.hdfs-cluster.svc.cluster.local:9870"
+  HDFS_CONF_dfs_namenode_rpc___address_hdfs___cluster_nn0: "hdfs-nn-0.hdfs-nn-svc.hbase-cluster.svc.cluster.local:8020"
+  HDFS_CONF_dfs_namenode_rpc___address_hdfs___cluster_nn1: "hdfs-nn-1.hdfs-nn-svc.hbase-cluster.svc.cluster.local:8020"
+  HDFS_CONF_dfs_ha_namenodes_hdfs___cluster: "nn0,nn1"
+  HDFS_CONF_dfs_nameservices: "hdfs-cluster"
+  HDFS_CONF_dfs_ha_automatic___failover_enabled: "true"
+  HDFS_CONF_ha_zookeeperquorum: "zk-0.zk-hs:2181,zk-1.zk-hs:2181,zk-2.zk-hs:2181"
+  HDFS_CONF_dfs_journalnode_edits_dir: "/hadoop/dfs/journal"
+  HDFS_CONF_dfs_ha_nn_not___become___active___in___safemode: "true"
+  HDFS_CONF_dfs_ha_fencing_methods: "shell(/bin/true)"
+  HDFS_CONF_dfs_hosts_exclude: "/etc/hadoop/dfs.exclude"
+  HDFS_CONF_dfs_namenode_heartbeat_recheck___interval: "10000"
