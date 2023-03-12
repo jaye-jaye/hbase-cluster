@@ -31,7 +31,8 @@ metadata:
   namespace: hbase-cluster
 spec:
   selector:
-    app: hdfs-jn
+    matchLabels:
+      app: hdfs-jn
   serviceName: hdfs-jn-svc
   replicas: 3
   updateStrategy:
@@ -41,15 +42,16 @@ spec:
       labels:
         app: hdfs-jn
     spec:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: "app"
-                  operator: In
-                  values:
-                    - hdfs-jn
-            topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - hdfs-jn
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: main
           imagePullPolicy: Always

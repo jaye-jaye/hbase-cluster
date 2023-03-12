@@ -23,7 +23,8 @@ metadata:
   namespace: hbase-cluster
 spec:
   selector:
-    app: hdfs-dn
+    matchLabels:
+      app: hdfs-dn
   serviceName: hdfs-dn-svc
   replicas: 3
   updateStrategy:
@@ -33,15 +34,16 @@ spec:
       labels:
         app: hdfs-dn
     spec:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: "app"
-                  operator: In
-                  values:
-                    - hdfs-dn
-            topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - hdfs-dn
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: main
           imagePullPolicy: Always

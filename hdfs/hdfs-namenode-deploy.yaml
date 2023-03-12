@@ -21,7 +21,8 @@ metadata:
   namespace: hbase-cluster
 spec:
   selector:
-    app: hdfs-nn
+    matchLabels:
+      app: hdfs-nn
   serviceName: hdfs-nn-svc
   replicas: 2
   updateStrategy:
@@ -31,15 +32,16 @@ spec:
       labels:
         app: hdfs-nn
     spec:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: "app"
-                  operator: In
-                  values:
-                    - hdfs-nn
-            topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - hdfs-nn
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: main
           imagePullPolicy: Always
@@ -52,6 +54,8 @@ spec:
             - configMapRef:
                 name: hadoop-env
           env:
+            - name: CLUSTER_NAME
+              value: hdfs-cluster
             - name: TZ
               value: Asia/Shanghai
           readinessProbe:
