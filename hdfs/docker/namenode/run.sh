@@ -23,11 +23,11 @@ if [ $HOSTNAME_IDX -eq 0 ]; then
   if [ "`ls -A $namedir`" == "" ]; then
     echo "Formatting namenode name directory: $namedir"
     set -e
-    $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format $CLUSTER_NAME
+    $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format -clusterid $CLUSTER_NAME -force
     set +e
 
     echo "Formatting zkfc"
-    OUTPUT=$($HADOOP_HOME/bin/hdfs --config $HADOOP_CONFIG_DIR zkfc -formatZK -forece 2>&1)
+    OUTPUT=$($HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR zkfc -formatZK -force 2>&1)
     echo $OUTPUT
     (echo $OUTPUT | grep -q "FATAL") && exit -1
   fi

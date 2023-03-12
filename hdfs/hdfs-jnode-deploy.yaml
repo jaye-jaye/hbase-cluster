@@ -11,7 +11,7 @@ spec:
       name: http
   clusterIP: None
   selector:
-    app: hdfs-dn
+    app: hdfs-jn
 ---
 
 apiVersion: v1

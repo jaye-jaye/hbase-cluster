@@ -5,6 +5,6 @@ ADD run.sh /run.sh
 ADD health.sh /health.sh
 
 # set log root logger config, hadoop start command use this env to override config in log4j-properties
-ENV HADOOP_ROOT_LOGGER=-"INFO,console,RFA"
+ENV HADOOP_ROOT_LOGGER="INFO,console,RFA"
 
 CMD ["/run.sh"]
