@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdfs-jn-svc
+  namespace: hbase-cluster
+spec:
+  ports:
+    - port: 8485
+      name: rpc
+    - port: 8480
+      name: http
+  clusterIP: None
+  selector:
+    app: hdfs-dn
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hdfs-jn-versionfile
+  namespace: hbase-cluster
+data:
+  VERSION.backup: |
+    # the file is used for journal node restarting with new docker, to avoid JournalNotFormattedException
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hdfs-jn
+  namespace: hbase-cluster
+spec:
+  selector:
+    app: hdfs-jn
+  serviceName: hdfs-jn-svc
+  replicas: 3
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app: hdfs-jn
+    spec:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app"
+                  operator: In
+                  values:
+                    - hdfs-jn
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: main
+          imagePullPolicy: Always
+          image: "192.168.9.128:5000/jayeljj/hadoop-journalnode:3.3.4"
+          resources:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          envFrom:
+            - configMapRef:
+                name: hadoop-env
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          readinessProbe:
+            tcpSocket:
+              port: 8485
+          livenessProbe:
+            exec:
+              command:
+                - /health.sh
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: logs
+              mountPath: /opt/hadoop-3.3.4/logs
+            - name: journal
+              mountPath: /hadoop/dfs/journal
+            - name: versionfile
+              mountPath: /etc/hadoop/VERSION.backup
+              subPath: "VERSION.backup"
+              readOnly: true
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: journal
+          emptyDir: {}
+        - name: versionfile
+          configMap:
+            name: hdfs-jn-versionfile
+            items:
+              - key: "VERSION.backup"
+                path: "VERSION.backup"

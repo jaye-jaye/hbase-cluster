@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hdfs-dn-svc
+  namespace: hbase-cluster
+spec:
+  ports:
+    - port: 9866
+      name: data
+    - port: 9864
+      name: http
+    - port: 9867
+      name: ipc
+  clusterIP: None
+  selector:
+    app: hdfs-dn
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hdfs-dn
+  namespace: hbase-cluster
+spec:
+  selector:
+    app: hdfs-dn
+  serviceName: hdfs-dn-svc
+  replicas: 3
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app: hdfs-dn
+    spec:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app"
+                  operator: In
+                  values:
+                    - hdfs-dn
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: main
+          imagePullPolicy: Always
+          image: "192.168.9.128:5000/jayeljj/hadoop-datanode:3.3.4"
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+          envFrom:
+            - configMapRef:
+                name: hadoop-env
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9864
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9864
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: logs
+              mountPath: /opt/hadoop-3.3.4/logs
+      volumes:
+        - name: logs
+          emptyDir: {}

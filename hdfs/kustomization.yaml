@@ -1,0 +1,5 @@
+resources:
+  - ./hdfs-config.yaml
+  - ./hdfs-jnode-deploy.yaml
+  - ./hdfs-namenode-deploy.yaml
+  - ./hdfs-datanode-deploy.yaml
