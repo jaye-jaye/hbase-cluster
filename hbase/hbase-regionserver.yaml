@@ -65,7 +65,7 @@ spec:
             preStop:
               exec:
                 # call graceful_stop.sh with servername to move regions in current server to another server
-                command: ["/bin/sh", "-c", 'curl -s "0:16030/rs-status" | grep "HBase Region Server" | grep -o -E "([0-9]+\.)[0-9]+" | xargs -I{} graceful_stop.sh {}']
+                command: ["/bin/sh", "-c", 'curl -s "0:16030/rs-status" | grep "HBase Region Server" | grep -o -E "([0-9]+\.)+[0-9]+" | xargs -I{} graceful_stop.sh {}']
           volumeMounts:
             - name: logs
               mountPath: /opt/hbase-2.4.15/logs
