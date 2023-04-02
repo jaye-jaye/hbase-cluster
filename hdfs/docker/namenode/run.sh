@@ -20,6 +20,7 @@ else
 fi
 
 if [ $HOSTNAME_IDX -eq 0 ]; then
+  echo "preparing namedir for active node"
   if [ "`ls -A $namedir`" == "" ]; then
     echo "Formatting namenode name directory: $namedir"
     set -e
@@ -32,6 +33,7 @@ if [ $HOSTNAME_IDX -eq 0 ]; then
     (echo $OUTPUT | grep -q "FATAL") && exit -1
   fi
 else
+  echo "preparing namedir for standby node"
   if [ "`ls -A $namedir`" == "" ]; then
     echo "Starting namenode for standby"
     $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -bootstrapStandby -nonInteractive

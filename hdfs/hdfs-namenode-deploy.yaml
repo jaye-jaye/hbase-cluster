@@ -1,6 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: hdfs-web-svc
+  namespace: hbase-cluster
+spec:
+  ports:
+    - port: 9870
+      name: http
+  type: NodePort
+  selector:
+    app: hdfs-nn
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: hdfs-nn-svc
   namespace: hbase-cluster
 spec:
