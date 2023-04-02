@@ -19,9 +19,11 @@ else
     exit -1
 fi
 
+namedir_content=$(ls -A $namedir)
+echo "namedir_content[$namedir_content]"
 if [ $HOSTNAME_IDX -eq 0 ]; then
   echo "preparing namedir for active node"
-  if [ "`ls -A $namedir`" == "" ]; then
+  if [ "$namedir_content" == "" ]; then
     echo "Formatting namenode name directory: $namedir"
     set -e
     $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format -clusterid $CLUSTER_NAME -force
@@ -34,7 +36,7 @@ if [ $HOSTNAME_IDX -eq 0 ]; then
   fi
 else
   echo "preparing namedir for standby node"
-  if [ "`ls -A $namedir`" == "" ]; then
+  if [ "$namedir_content" == "" ]; then
     echo "Starting namenode for standby"
     $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -bootstrapStandby -nonInteractive
   fi
