@@ -1,0 +1,4 @@
+resources:
+  - ./hbase-config.yaml
+  - ./hbase-master.yaml
+  - ./hbase-regionserver.yaml

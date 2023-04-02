@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hbase-env
+  namespace: hbase-cluster
+data:
+  # set timezone
+  TZ: "Asia/Shanghai"
+  # hbase config
+  HBASE_CONF_hbase_rootdir: "hdfs://hdfs-cluster/hbase"
+  HBASE_CONF_hbase_cluster_distributed: "true"
+  HBASE_CONF_hbase_zookeeper_quorum: "zk-0.zk-hs:2181,zk-1.zk-hs:2181,zk-2.zk-hs:2181"
+  HBASE_CONF_hbase_master_port: "16000"
+  HBASE_CONF_hbase_master_info_port: "16010"
+  HBASE_CONF_hbase_regionserver_port: "16020"
+  HBASE_CONF_hbase_regionserver_info_port: "16030"
+  HBASE_MANAGES_ZK: "false"
+  # copy from hdfs namenode
+  HBASE_CONF_dfs_client_failover_proxy_provider_hdfs___cluster: "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+  HBASE_CONF_dfs_namenode_http___address_hdfs___cluster_nn0 : "hdfs-nn-0.hdfs-nn-svc.hbase-cluster.svc.cluster.local:9870"
+  HBASE_CONF_dfs_namenode_http___address_hdfs___cluster_nn1: "hdfs-nn-1.hdfs-nn-svc.hbase-cluster.svc.cluster.local:9870"
+  HBASE_CONF_dfs_namenode_rpc___address_hdfs___cluster_nn0: "hdfs-nn-0.hdfs-nn-svc.hbase-cluster.svc.cluster.local:8020"
+  HBASE_CONF_dfs_namenode_rpc___address_hdfs___cluster_nn1: "hdfs-nn-1.hdfs-nn-svc.hbase-cluster.svc.cluster.local:8020"
+  HBASE_CONF_dfs_ha_namenodes_hdfs___cluster: "nn0,nn1"
+  HBASE_CONF_dfs_nameservices: "hdfs-cluster"
+  HBASE_CONF_dfs_ha_automatic___failover_enabled: "true"
+  HBASE_CONF_ha_zookeeper_quorum: "zk-0.zk-hs:2181,zk-1.zk-hs:2181,zk-2.zk-hs:2181"
+  
