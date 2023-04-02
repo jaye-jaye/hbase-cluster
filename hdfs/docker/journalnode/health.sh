@@ -1,4 +1,4 @@
-#1/bin/bash
+#!/bin/bash
 set -e
 curl -f http://0:8480/
 if [ $? -eq 0 ]; then
