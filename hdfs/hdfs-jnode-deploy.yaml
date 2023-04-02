@@ -80,10 +80,10 @@ spec:
               mountPath: /opt/hadoop-3.3.4/logs
             - name: journal
               mountPath: /hadoop/dfs/journal
-            - name: versionfile
-              mountPath: /etc/hadoop/VERSION.backup
-              subPath: "VERSION.backup"
-              readOnly: true
+            # - name: versionfile
+            #   mountPath: /etc/hadoop/VERSION.backup
+            #   subPath: "VERSION.backup"
+            #   readOnly: true
       volumes:
         - name: logs
           emptyDir: {}
